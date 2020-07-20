@@ -1,12 +1,26 @@
-import React from 'react';
-import './App.css';
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Movies recommendation</h1>
-    </div>
-  );
+import { Home } from './pages/Home';
+import { MovieDetail } from './pages/MovieDetail';
+
+import './App.css';
+import 'bulma/css/bulma.css';
+import { NotFound } from './pages/NotFound';
+
+class App extends Component {
+
+  render() {
+    return (
+      <div className="App">
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route path='/detail/:id' component={MovieDetail} />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
+    );
+  }
 }
 
 export default App;
