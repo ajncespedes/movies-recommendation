@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 
 import { Home } from './pages/Home';
 import { MovieDetail } from './pages/MovieDetail';
@@ -15,7 +15,7 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route path='/detail/:id' component={MovieDetail} />
+          <Route path='/detail/:id' component={withRouter(MovieDetail)} />
           <Route component={NotFound} />
         </Switch>
       </div>

@@ -21,7 +21,7 @@ export class Home extends Component {
             <div>
                 <Title>Movies recommendation</Title>
                 <div className="SearchForm-wrapper">
-                <SearchForm onResults={this._handleResults}/>
+                    <SearchForm onResults={this._handleResults}/>
                 </div>
                 {this.state.usedSearch
                 ? this._renderResults()

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ButtonBackToHome } from '../components/ButtonBackToHome';
-import { OMDB_API_KEY, OMDB_URL } from '../util/Constants';
+import { MoviesList } from '../components/MoviesList';
+import { getMovieById, getSimilarMovies } from '../services/GetMovies';
+
+
 
 export class MovieDetail extends Component {
     static propTypes = {
@@ -13,21 +16,23 @@ export class MovieDetail extends Component {
         })
     };
 
-    state = { movie: {} };
+    state = { movie: {}, similarMovies: [] };
 
-    _fetchMovie({ id }) {
-        fetch(`${OMDB_URL}?apikey=${OMDB_API_KEY}&i=${id}&type=movie`)
-        .then(res => res.json())
-        .then(movie => {
-            console.log(movie);
-            this.setState({ movie });
-        });
+    _renderSimilarMovies() {
+        return  this.state.similarMovies.length === 0
+            ? <p>No similar movies found</p>
+            : <MoviesList movies={this.state.similarMovies} />
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         console.log(this.props);
         const { id } = this.props.match.params;
-        this._fetchMovie({ id });
+        
+        const movie = await getMovieById({ id });
+        this.setState({ movie });
+
+        const similarMovies = await getSimilarMovies(movie);
+        this.setState({ similarMovies });
     }
 
     render() {
@@ -40,6 +45,8 @@ export class MovieDetail extends Component {
                 <h3>{Actors}</h3>
                 <span>{Metascore}</span>
                 <p>{Plot}</p>
+                <p className="title">Recomendations</p>
+                {this._renderSimilarMovies()}
             </div>
         )
     }
