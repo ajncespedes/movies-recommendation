@@ -1,33 +1,36 @@
-import React, { Component } from 'react';
-import { Title } from '../components/Title';
-import { SearchForm } from '../components/SearchForm';
-import { MoviesList } from '../components/MoviesList';
+import React, { useState } from 'react';
+import Title from '../components/Title';
+import SearchForm from '../components/SearchForm';
+import MoviesList from '../components/MoviesList';
 
-export class Home extends Component {
-    state = { usedSearch: false, results: []};
+const Home = () => {
+    const [usedSearch, setUsedSearch] = useState(false);
+    const [results, setResults] = useState([]);
 
-    _handleResults = (results) => {
-      this.setState({ results, usedSearch: true });
-    }
+    const onResults = results => {
+        setUsedSearch(true);
+        setResults(results);
+    };
   
-    _renderResults() {
-     return  this.state.results.length === 0
+    const renderResults = () => {
+        console.log(results);
+     return  results.length === 0
         ? <p>Movie not found</p>
-        : <MoviesList movies={this.state.results} />
-    }
+        : <MoviesList movies={results} />
+    };
 
-    render() {
-        return (
-            <div>
-                <Title>Movies recommendation</Title>
-                <div className="SearchForm-wrapper">
-                    <SearchForm onResults={this._handleResults}/>
-                </div>
-                {this.state.usedSearch
-                ? this._renderResults()
-                : <small>Use the form to search a movie</small>
-                }
+    return (
+        <div>
+            <Title>Movies recommendation</Title>
+            <div className="SearchForm-wrapper">
+                <SearchForm onResults={onResults}/>
             </div>
-        )
-    }
+            {usedSearch
+                ? renderResults()
+                : <small>Use the form to search a movie</small>
+            }
+        </div>
+    );
 }
+
+export default Home;

@@ -1,42 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { OMDB_API_KEY, OMDB_URL } from '../util/Constants';
 
-export class SearchForm extends Component {
-    state={
-        inputMovie: ''
-    }
+const SearchForm = ({ onResults }) => {
+    const [inputMovie, setInputMovie] = useState('');
 
-    _handleChange = (e) => {
-        this.setState( {inputMovie: e.target.value} );
-    }
+    const onChange = e => {
+        setInputMovie(e.target.value);
+    };
 
-    _handleSubmit = (e) => {
+    const onSubmit = e => {
         e.preventDefault();
-        const { inputMovie } = this.state;
         
         fetch(`${OMDB_URL}?apikey=${OMDB_API_KEY}&s=${inputMovie}&type=movie`)
         .then(res => res.json())
         .then(results => {
             const { Search = [], totalResults = "0" } = results;
             console.log({ Search, totalResults});
-            this.props.onResults(Search);
+            onResults(Search);
         });
-    }
+    };
 
-    render() {
-        return (
-            <form onSubmit={this._handleSubmit}>
-                <div className="field is-grouped">
-                    <p className="control">
-                        <input className="input" onChange={this._handleChange} type="text" placeholder="Movie to search..." />
-                    </p>
-                    <p className="control">
-                        <button className="button is-info">
-                        Search
-                        </button>
-                    </p>
-                </div>
-            </form>
-        )
-    }
+    return (
+        <form onSubmit={e => onSubmit(e)}>
+            <div className="field is-grouped">
+                <p className="control">
+                    <input className="input" onChange={e => onChange(e)} type="text" placeholder="Movie to search..." />
+                </p>
+                <p className="control">
+                    <button className="button is-info">
+                    Search
+                    </button>
+                </p>
+            </div>
+        </form>
+    );
 }
+
+export default SearchForm;
