@@ -14,13 +14,13 @@ const Home = () => {
   
     const renderResults = () => {
         console.log(results);
-     return  results.length === 0
-        ? <p>Movie not found</p>
-        : <MoviesList movies={results} />
+        return  results.length === 0
+            ? <p>Movie not found</p>
+            : <MoviesList movies={results} />
     };
 
     return (
-        <div>
+        <div className="HomeSearch">
             <Title>Movies recommendation</Title>
             <div className="SearchForm-wrapper">
                 <SearchForm onResults={onResults}/>

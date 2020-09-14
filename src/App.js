@@ -3,6 +3,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
+import Footer from './components/Footer';
 
 import './App.css';
 import 'bulma/css/bulma.css';
@@ -16,6 +17,7 @@ const App = () => {
         <Route path='/detail/:id' component={withRouter(MovieDetail)} />
         <Route component={NotFound} />
       </Switch>
+      <Footer />
     </div>
   );
 }
