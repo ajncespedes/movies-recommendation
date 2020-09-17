@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 const BreadCrumb = () => {
     return (
-        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
                 <li><Link  to='/'>Home</Link></li>
-                <li class="is-active">Movie detail</li>
+                <li className="is-active">Movie detail</li>
             </ul>
         </nav>
     );

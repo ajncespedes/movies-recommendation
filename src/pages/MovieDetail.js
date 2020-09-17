@@ -45,34 +45,36 @@ const MovieDetail = (props) => {
                         <Title style={{color: "#fff !important"}}>{movie.Title} ({movie.Year})</Title>
                         <hr />
                         <table>
-                            <tr>
-                                <td>Rating</td>
-                                <td><a href={`https://www.imdb.com/title/${movie.imdbID}`} target="_blank" rel="noopener noreferrer">{movie.imdbRating}</a></td>
-                            </tr>
-                            <tr>
-                                <td>Genre</td>
-                                <td>{movie.Genre}</td>
-                            </tr>
-                            <tr>
-                                <td>Runtime</td>
-                                <td>{movie.Runtime}</td>
-                            </tr>
-                            <tr>
-                                <td>Rated</td>
-                                <td>{movie.Rated}</td>
-                            </tr>
-                            <tr>
-                                <td>Director</td>
-                                <td>{movie.Director}</td>
-                            </tr>
-                            <tr>
-                                <td>Actors</td>
-                                <td>{movie.Actors}</td>
-                            </tr>
-                            <tr>
-                                <td>Plot</td>
-                                <td>{movie.Plot}</td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td>Rating</td>
+                                    <td><a href={`https://www.imdb.com/title/${movie.imdbID}`} target="_blank" rel="noopener noreferrer">{movie.imdbRating}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Genre</td>
+                                    <td>{movie.Genre}</td>
+                                </tr>
+                                <tr>
+                                    <td>Runtime</td>
+                                    <td>{movie.Runtime}</td>
+                                </tr>
+                                <tr>
+                                    <td>Rated</td>
+                                    <td>{movie.Rated}</td>
+                                </tr>
+                                <tr>
+                                    <td>Director</td>
+                                    <td>{movie.Director}</td>
+                                </tr>
+                                <tr>
+                                    <td>Actors</td>
+                                    <td>{movie.Actors}</td>
+                                </tr>
+                                <tr>
+                                    <td>Plot</td>
+                                    <td>{movie.Plot}</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     
