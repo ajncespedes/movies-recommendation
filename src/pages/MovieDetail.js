@@ -9,11 +9,20 @@ import { getMovieById, getSimilarMovies } from '../services/GetMovies';
 const MovieDetail = (props) => {
     const [movie, setMovie] = useState({});
     const [similarMovies, setSimilarMovies] = useState([]);
+    const [loadingMovies, setLoadingMovies] = useState(true);
 
     const renderSimilarMovies = () => {
-        return similarMovies.length === 0
+        if(loadingMovies) {
+            return (
+                <div className="has-text-centered">
+                    <div className="lds-dual-ring"></div>
+                    <h1 className="title is-3">Loading...</h1>
+                </div>);
+        } else {
+            return similarMovies.length === 0
             ? <p>No similar movies found</p>
             : <MoviesList movies={similarMovies} />
+        }
     };
 
     useEffect(() => {
@@ -25,12 +34,13 @@ const MovieDetail = (props) => {
 
             const similarMovies = await getSimilarMovies(movie);
             setSimilarMovies(similarMovies);
+
+            setLoadingMovies(false);
         };
 
         searchMovies();
     }, [props]);
 
-    //const { Title, Poster, Actors, Metascore, Plot } = movie;
     return (
         <div>
             <div className="columns">
