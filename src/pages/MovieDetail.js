@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BreadCrumb from '../components/BreadCrumb';
 import MoviesList from '../components/MoviesList';
-import Title from '../components/Title';
+import Spinner from '../components/Spinner';
 import { getMovieById, getSimilarMovies } from '../services/GetMovies';
 
 
@@ -13,11 +13,7 @@ const MovieDetail = (props) => {
 
     const renderSimilarMovies = () => {
         if(loadingMovies) {
-            return (
-                <div className="has-text-centered">
-                    <div className="lds-dual-ring"></div>
-                    <h1 className="title is-3">Loading...</h1>
-                </div>);
+            return <Spinner/>
         } else {
             return similarMovies.length === 0
             ? <p>No similar movies found</p>
@@ -47,12 +43,11 @@ const MovieDetail = (props) => {
                 <div className="column is-4">
                     <BreadCrumb />
                     <br/>
-                    <br/>
                     <img src={movie.Poster} alt={movie.Title}/>
                 </div>
                 <div className="column">
                     <div className="MovieContent">
-                        <Title style={{color: "#fff !important"}}>{movie.Title} ({movie.Year})</Title>
+                    <p className="title">{movie.Title} ({movie.Year})</p>
                         <hr />
                         <table>
                             <tbody>
@@ -92,6 +87,7 @@ const MovieDetail = (props) => {
                 </div>
             </div>
             <p className="title">Recomendations</p>
+            <p className="subtitle">You could also like</p>
             {renderSimilarMovies()}
         </div>
     );

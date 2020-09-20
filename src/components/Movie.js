@@ -8,7 +8,7 @@ const Movie = ({ id, poster, title, year }) => {
         <Link to={`/detail/${id}`} className="card">
             <div className="card-image">
                 <figure className="image">
-                    <img src={poster} alt={title} />
+                    <img className="movie-image" src={poster} alt={title} />
                 </figure>
             </div>
             <div className="card-content">

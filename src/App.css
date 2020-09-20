@@ -30,15 +30,6 @@
   margin-top: 60px;
 }
 
-.social li {
-  float: right;
-  margin-right: 5px;
-}
-
-.HomeSearch {
-  text-align: center;
-}
-
 table {
   margin-top: 40px;
   width: 100%;
@@ -95,4 +86,15 @@ body > #root > div {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.movie-image {
+  border-radius: 10px;
+  height: 400px !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.movie-image:hover {
+  opacity: 0.8;
+	transition: .1s ease-in-out;
 }

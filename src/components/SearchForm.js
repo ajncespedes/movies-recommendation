@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { OMDB_API_KEY, OMDB_URL } from '../util/Constants';
 
-const SearchForm = ({ onResults }) => {
+const SearchForm = ({ onResults, onInputMovie, onLoading }) => {
     const [inputMovie, setInputMovie] = useState('');
 
     const onChange = e => {
@@ -11,13 +11,17 @@ const SearchForm = ({ onResults }) => {
     const onSubmit = e => {
         e.preventDefault();
         
+        onLoading(true);
         fetch(`${OMDB_URL}?apikey=${OMDB_API_KEY}&s=${inputMovie}&type=movie`)
         .then(res => res.json())
         .then(results => {
             const { Search = [], totalResults = "0" } = results;
             console.log({ Search, totalResults});
             onResults(Search);
+            onLoading(false);
         });
+
+        onInputMovie(inputMovie);
     };
 
     return (
