@@ -36,14 +36,16 @@ const MovieDetail = (props) => {
 
         searchMovies();
     }, [props]);
-
+    
     return (
         <div>
             <div className="columns">
                 <div className="column is-4">
                     <BreadCrumb />
                     <br/>
-                    <img src={movie.Poster} alt={movie.Title}/>
+                    { movie.Poster === "N/A" ?
+                       <img src="/images/no-image.png" alt={movie.Title} /> : <img src={movie.Poster} alt={movie.Title}/> 
+                    }
                 </div>
                 <div className="column">
                     <div className="MovieContent">

@@ -8,7 +8,9 @@ const Movie = ({ id, poster, title, year }) => {
         <Link to={`/detail/${id}`} className="card">
             <div className="card-image">
                 <figure className="image">
-                    <img className="movie-image" src={poster} alt={title} />
+                    { poster === "N/A" ?
+                       <img className="movie-image" src="/images/no-image.png" alt={title} /> : <img className="movie-image" src={poster} alt={title} /> 
+                    }
                 </figure>
             </div>
             <div className="card-content">
