@@ -1,7 +1,7 @@
 import { OMDB_API_KEY, OMDB_URL, TASTEDIVE_API_KEY, TASTEDIVE_URL, CORS_ANYWHERE_API } from '../util/Constants';
 
 export async function getMovieById({ id }) {
-    const data = await fetch(`${OMDB_URL}?apikey=${OMDB_API_KEY}&i=${id}&type=movie`);
+    const data = await fetch(`${OMDB_URL}?apikey=${OMDB_API_KEY}&i=${id}&type=movie&plot=full`);
     const movie = await data.json();
     console.log('info', movie);
     
