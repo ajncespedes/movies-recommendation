@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import BreadCrumb from '../components/BreadCrumb';
+import NavBar from '../components/NavBar';
 import MoviesList from '../components/MoviesList';
 import Spinner from '../components/Spinner';
 import { getMovieById, getSimilarMovies } from '../services/GetMovies';
@@ -39,9 +39,9 @@ const MovieDetail = (props) => {
     
     return (
         <div>
+            <NavBar />
             <div className="columns">
                 <div className="column is-4">
-                    <BreadCrumb />
                     <br/>
                     { movie.Poster === "N/A" ?
                        <img src="/images/no-image.png" alt={movie.Title} /> : <img src={movie.Poster} alt={movie.Title}/> 
@@ -84,8 +84,6 @@ const MovieDetail = (props) => {
                             </tbody>
                         </table>
                     </div>
-                    
-                    
                 </div>
             </div>
             <p className="title">Recomendations</p>

@@ -6,6 +6,7 @@ import MovieDetail from './pages/MovieDetail';
 import Footer from './components/Footer';
 
 import './App.css';
+import './SelectSearch.css';
 import 'bulma/css/bulma.css';
 import NotFound from './pages/NotFound';
 
