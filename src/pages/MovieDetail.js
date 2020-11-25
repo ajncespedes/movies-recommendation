@@ -4,12 +4,18 @@ import NavBar from '../components/NavBar';
 import MoviesList from '../components/MoviesList';
 import Spinner from '../components/Spinner';
 import { getMovieById, getSimilarMovies } from '../services/GetMovies';
-
+import firebaseDB from '../services/firebaseDB';
+import BeautyStars from 'beauty-stars';
+import { useAuth } from '../contexts/AuthContext';
 
 const MovieDetail = (props) => {
     const [movie, setMovie] = useState({});
     const [similarMovies, setSimilarMovies] = useState([]);
     const [loadingMovies, setLoadingMovies] = useState(true);
+    const [score, setScore] = useState(0);
+    const [voted, setVoted] = useState(false);
+    const { currentUser } = useAuth();
+    const [errorVote, setErrorVote] = useState('');
 
     const renderSimilarMovies = () => {
         if(loadingMovies) {
@@ -21,17 +27,52 @@ const MovieDetail = (props) => {
         }
     };
 
+    const scoreOnChange = (value) => {
+        if(currentUser) {
+            if(!voted) {
+                firebaseDB.getMovieByImdbID(movie.imdbID).once('value', (snapshot) => {
+                    let movieDB = snapshot.val();
+    
+                    if(movieDB) {
+                        const newScore = (score * movieDB.votes + value) / (movieDB.votes + 1);
+                        firebaseDB.updateMovie(movieDB.imdbID, {score: newScore, votes: movieDB.votes + 1});
+        
+                        setVoted(true);
+                        setScore(value);
+                    }
+                });
+            }
+        } else {
+            setErrorVote('You need to be registered to be able to rate the film');
+        }
+    }
+
+    const closeAlert = (value) => {
+        setErrorVote('');
+    }
+
     useEffect(() => {
         const searchMovies = async () => {
             const { id } = props.match.params;
             
-            const movie = await getMovieById({ id });
-            setMovie(movie);
+            const movieAPI = await getMovieById({ id });
+            setMovie(movieAPI);
 
-            const similarMovies = await getSimilarMovies(movie);
+            const similarMovies = await getSimilarMovies(movieAPI);
             setSimilarMovies(similarMovies);
 
             setLoadingMovies(false);
+            
+            firebaseDB.getMovieByImdbID(movieAPI.imdbID).once('value', (snapshot) => {
+                let movieDB = snapshot.val();
+                if(movieDB) {
+                    firebaseDB.updateMovie(movieAPI.imdbID, {views: movieDB.views + 1});
+                } else {
+                    movieDB = firebaseDB.createMovie(movieAPI);
+                }
+
+                setScore(movieDB.score);
+            });
         };
 
         searchMovies();
@@ -43,8 +84,29 @@ const MovieDetail = (props) => {
             <div className="columns">
                 <div className="column is-4">
                     <br/>
-                    { movie.Poster === "N/A" ?
-                       <img src="/images/no-image.png" alt={movie.Title} /> : <img src={movie.Poster} alt={movie.Title}/> 
+                    <div className="poster-stars">
+                        <figure className="image">
+                            { movie.Poster === "N/A" ?
+                                <img src="/images/no-image.png" alt={movie.Title} /> :
+                                <img src={movie.Poster} alt={movie.Title}/>
+                            }
+                            <div className="stars">
+                                <BeautyStars
+                                    maxStars={10}
+                                    size={"27px"}
+                                    gap={"5px"}
+                                    inactiveColor={"#d9e8ed"}
+                                    value={score}
+                                    onChange={scoreOnChange}
+                                />
+                            </div>
+                        </figure>
+                    </div>
+                    {errorVote && 
+                        <div className="notification is-danger" style={{'marginTop': '10px'}}>
+                            <button className="delete" onClick={closeAlert}></button>
+                            {errorVote}
+                        </div>
                     }
                 </div>
                 <div className="column">

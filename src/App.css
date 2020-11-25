@@ -98,3 +98,14 @@ body > #root > div {
   opacity: 0.8;
 	transition: .1s ease-in-out;
 }
+
+.poster-stars {
+  display: inline-block;
+  background-color: #222930;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.stars {
+  padding: 5px;
+}

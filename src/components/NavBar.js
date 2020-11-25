@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link, useHistory  } from 'react-router-dom';
 import SelectSearch from 'react-select-search';
 import { OMDB_API_KEY, OMDB_URL } from '../util/Constants';
+import { useAuth } from '../contexts/AuthContext';
 
 const NavBar = () => {
+    const [logoutError, setLogoutError] = useState('');
+    const { currentUser, logout } = useAuth();
 
     const history = useHistory();
 
@@ -35,8 +38,32 @@ const NavBar = () => {
         );
     }
 
+
+    const renderLogout = () => {
+        const logoutStyle = {
+            marginLeft: 30,
+            cursor: 'pointer',
+        };
+        
+        return (
+            <a href onClick={onLogout} style={logoutStyle}>
+                { currentUser ? 'Logout' : 'Login'}
+            </a>
+        );
+    }
+
     const onChange = (imdbID) => {
         history.push(`/detail/${imdbID}`);
+    }
+
+    const onLogout = async () => {
+        try{
+            await logout();
+            history.push('/signin');
+        } catch(e) {
+            setLogoutError(e.message);
+        }
+        
     }
 
     return (
@@ -57,6 +84,7 @@ const NavBar = () => {
                             onChange = {onChange}
                             renderOption={renderMovieOption}
                         />
+                        {renderLogout()}
                     </div>
                 </div>
             </nav>
