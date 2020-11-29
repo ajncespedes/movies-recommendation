@@ -11,6 +11,7 @@ import Signin from './pages/Signin';
 import './App.css';
 import './SelectSearch.css';
 import 'bulma/css/bulma.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import { AuthProvider } from './contexts/AuthContext';
 

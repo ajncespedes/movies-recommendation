@@ -9,6 +9,7 @@
     "beauty-stars": "^1.1.0",
     "bulma": "0.9.0",
     "firebase": "^7.22.0",
+    "font-awesome": "^4.7.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",

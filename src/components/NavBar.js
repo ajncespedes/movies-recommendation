@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Link, useHistory  } from 'react-router-dom';
 import SelectSearch from 'react-select-search';
+import UserDropdown from './UserDropdown';
 import { OMDB_API_KEY, OMDB_URL } from '../util/Constants';
-import { useAuth } from '../contexts/AuthContext';
 
 const NavBar = () => {
-    const [logoutError, setLogoutError] = useState('');
-    const { currentUser, logout } = useAuth();
-
     const history = useHistory();
 
     const getOptions = (query) => {
@@ -38,53 +35,33 @@ const NavBar = () => {
         );
     }
 
-
-    const renderLogout = () => {
-        const logoutStyle = {
-            marginLeft: 30,
-            cursor: 'pointer',
-        };
-        
-        return (
-            <a href onClick={onLogout} style={logoutStyle}>
-                { currentUser ? 'Logout' : 'Login'}
-            </a>
-        );
-    }
-
     const onChange = (imdbID) => {
         history.push(`/detail/${imdbID}`);
-    }
-
-    const onLogout = async () => {
-        try{
-            await logout();
-            history.push('/signin');
-        } catch(e) {
-            setLogoutError(e.message);
-        }
-        
     }
 
     return (
         <div>
             <nav className="navbar is-fixed-top is-black pl-5 pr-6" role="navigation" aria-label="main navigation">
-                <div className="navbar-menu pt-2">
+                <div className="navbar-menu">
                     <div className="navbar-start">
                         <Link className="navbar-item" to="/">
                             <img src="/images/palomitas-de-maiz.svg" alt="Home" width="30px" height="30px" /> &nbsp; Movies Recommendation
                         </Link>
                     </div>
                     <div className="navbar-end">
-                        <SelectSearch
-                            options = {[]}
-                            getOptions = {getOptions}
-                            search
-                            placeholder="Movie to search..."
-                            onChange = {onChange}
-                            renderOption={renderMovieOption}
-                        />
-                        {renderLogout()}
+                        <div className="mt-2">
+                            <SelectSearch
+                                options = {[]}
+                                getOptions = {getOptions}
+                                search
+                                placeholder="Movie to search..."
+                                onChange = {onChange}
+                                renderOption={renderMovieOption}
+                            />
+                        </div>
+                        <div className="mt-1">
+                            <UserDropdown />
+                        </div>
                     </div>
                 </div>
             </nav>

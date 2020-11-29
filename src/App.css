@@ -4,11 +4,6 @@
   padding: 50px;
 }
 
-.SearchForm-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
 .MoviesList {
   display: flex;
   flex-wrap: wrap;
@@ -107,4 +102,9 @@ body > #root > div {
 
 .stars {
   padding: 5px;
+}
+
+a.dropdown-item:hover, button.dropdown-item:hover {
+  background-color: rgb(27, 28, 34) !important;
+  color: #e6e6e6;
 }
