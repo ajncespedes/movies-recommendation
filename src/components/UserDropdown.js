@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const UserDropdown = () => {
     const [collapsed, setCollapsed] = useState(true);
-    const { currentUser, logout } = useAuth();
+    const { currentUsername, logout } = useAuth();
 
     const history = useHistory();
 
@@ -18,12 +18,12 @@ const UserDropdown = () => {
         history.push('/signin');
     };
     
-    if(currentUser) {
+    if(currentUsername) {
         return (
             <div className = {"dropdown" + (collapsed ? "" : " is-active")}>
                 <div className = "dropdown-trigger">
                     <button className = "button is-black" aria-haspopup = "true" aria-controls = "dropdown-menu" onClick={() => onClick()}>
-                        <span>{currentUser.email.split('@')[0]}</span>
+                        <span>{currentUsername}</span>
                         <span className = "icon is-small">
                             <i className = "fa fa-angle-down" aria-hidden="true"></i>
                         </span>
@@ -31,10 +31,10 @@ const UserDropdown = () => {
                 </div>
                 <div className = "dropdown-menu" id = "dropdown-menu" role = "menu">
                     <div className = "dropdown-content has-background-black">
-                        <a href className = "dropdown-item has-text-white" onClick={onLogout}>
+                        <button className = "link-button dropdown-item has-text-white" onClick={onLogout}>
                             <i className="fa fa-sign-out"></i>
                             <span className="ml-1">Sign out</span>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

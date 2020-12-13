@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import NavBar from '../components/NavBar';
 import MoviesList from '../components/MoviesList';
 import Spinner from '../components/Spinner';
-import { getMovieById, getSimilarMovies } from '../services/GetMovies';
-import firebaseDB from '../services/firebaseDB';
-import BeautyStars from 'beauty-stars';
+import { getMovieById, getSimilarMovies, getMeanScore, getUserScore } from '../services/MoviesService';
+import firebaseService from '../services/FirebaseService';
+import ScoreStars from '../components/ScoreStars';
 import { useAuth } from '../contexts/AuthContext';
 
 const MovieDetail = (props) => {
     const [movie, setMovie] = useState({});
     const [similarMovies, setSimilarMovies] = useState([]);
     const [loadingMovies, setLoadingMovies] = useState(true);
-    const [score, setScore] = useState(0);
-    const [voted, setVoted] = useState(false);
-    const { currentUser } = useAuth();
+    const [meanScore, setMeanScore] = useState(0);
+    const [userScore, setUserScore] = useState(0);
+    const [numberOfVotes, setNumberOfVotes] = useState(0);
+    const { currentUsername } = useAuth();
     const [errorVote, setErrorVote] = useState('');
 
-    const renderSimilarMovies = () => {
+
+    const RenderSimilarMovies = () => {
         if(loadingMovies) {
             return <Spinner/>
         } else {
@@ -28,26 +30,42 @@ const MovieDetail = (props) => {
     };
 
     const scoreOnChange = (value) => {
-        if(currentUser) {
-            if(!voted) {
-                firebaseDB.getMovieByImdbID(movie.imdbID).once('value', (snapshot) => {
-                    let movieDB = snapshot.val();
-    
-                    if(movieDB) {
-                        const newScore = (score * movieDB.votes + value) / (movieDB.votes + 1);
-                        firebaseDB.updateMovie(movieDB.imdbID, {score: newScore, votes: movieDB.votes + 1});
-        
-                        setVoted(true);
-                        setScore(value);
+        if(currentUsername) {
+            firebaseService.getMovieByImdbID(movie.imdbID).once('value', (snapshot) => {
+                let movieDB = snapshot.val();
+
+                if(movieDB) {
+                    let scores = movieDB.scores;
+                    if(!scores) {
+                        scores = [];
                     }
-                });
-            }
+
+                    let userIndex = scores.findIndex((score => score.username === currentUsername));
+
+                    if(scores[userIndex]){
+                        scores[userIndex].score = value;
+                    } else {
+                        scores.push({username: currentUsername, score: value});
+                    }
+                    movieDB.scores = scores;
+
+                    const meanScore = getMeanScore(movieDB);
+                    movieDB.meanScore = meanScore;
+
+                    setNumberOfVotes(scores.length);
+                    setUserScore(value);
+                    setMeanScore(meanScore);
+                    
+                    firebaseService.updateMovie(movieDB.imdbID, {scores: scores, meanScore: meanScore});
+                    setMovie(movieDB);
+                }
+            });
         } else {
             setErrorVote('You need to be registered to be able to rate the film');
         }
     }
 
-    const closeAlert = (value) => {
+    const closeAlert = () => {
         setErrorVote('');
     }
 
@@ -56,27 +74,35 @@ const MovieDetail = (props) => {
             const { id } = props.match.params;
             
             const movieAPI = await getMovieById({ id });
-            setMovie(movieAPI);
-
-            const similarMovies = await getSimilarMovies(movieAPI);
-            setSimilarMovies(similarMovies);
-
-            setLoadingMovies(false);
+            if(movieAPI.Response !== "False") {
+                setMovie(movieAPI);
             
-            firebaseDB.getMovieByImdbID(movieAPI.imdbID).once('value', (snapshot) => {
-                let movieDB = snapshot.val();
-                if(movieDB) {
-                    firebaseDB.updateMovie(movieAPI.imdbID, {views: movieDB.views + 1});
-                } else {
-                    movieDB = firebaseDB.createMovie(movieAPI);
-                }
+                firebaseService.getMovieByImdbID(movieAPI.imdbID).once('value', (snapshot) => {
+                    let movieDB = snapshot.val();
+                    if(movieDB) {
+                        firebaseService.updateMovie(movieAPI.imdbID, {views: movieDB.views + 1});
+                    } else {
+                        movieDB = firebaseService.createMovie(movieAPI);
+                    }
+                    const meanScore = movieDB.meanScore;
+                    setMeanScore(meanScore);
+                    
+                    const userScore = getUserScore(currentUsername, movieDB);
+                    setUserScore(userScore);
+                    if(movieDB.scores){
+                        setNumberOfVotes(movieDB.scores.length);
+                    }
+                });
 
-                setScore(movieDB.score);
-            });
+                const similarMovies = await getSimilarMovies(movieAPI);
+                setSimilarMovies(similarMovies);
+                setLoadingMovies(false);
+            }
         };
 
         searchMovies();
-    }, [props]);
+    }, [props, currentUsername]);
+    
     
     return (
         <div>
@@ -90,16 +116,16 @@ const MovieDetail = (props) => {
                                 <img src="/images/no-image.png" alt={movie.Title} /> :
                                 <img src={movie.Poster} alt={movie.Title}/>
                             }
-                            <div className="stars">
-                                <BeautyStars
-                                    maxStars={10}
-                                    size={"27px"}
-                                    gap={"5px"}
-                                    inactiveColor={"#d9e8ed"}
-                                    value={score}
-                                    onChange={scoreOnChange}
-                                />
-                            </div>
+                            <ScoreStars
+                                maxStars={10}
+                                size={"27px"}
+                                gap={"5px"}
+                                inactiveColor={"#d9e8ed"}
+                                meanScore={meanScore}
+                                userScore={userScore}
+                                numberOfVotes={numberOfVotes}
+                                onChange={scoreOnChange}
+                            />
                         </figure>
                     </div>
                     {errorVote && 
@@ -150,7 +176,7 @@ const MovieDetail = (props) => {
             </div>
             <p className="title">Recomendations</p>
             <p className="subtitle">You could also like</p>
-            {renderSimilarMovies()}
+            <RenderSimilarMovies/>
         </div>
     );
 }

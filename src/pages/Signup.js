@@ -26,7 +26,7 @@ const Signup = () => {
             await signup(usernameRef.current.value, passwordRef.current.value);
             history.push('/');
         } catch(e) {
-            setError(e.message);
+            setError(e.message.replace('email address', 'username'));
         }
         setLoading(false);
     };

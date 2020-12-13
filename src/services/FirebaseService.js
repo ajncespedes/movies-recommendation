@@ -7,7 +7,7 @@ const getAllMovies = () => {
 };
 
 const getMostLikedMovies = (limit) => {
-    return db.orderByChild("score").startAt(1).limitToLast(limit);
+    return db.orderByChild("meanScore").limitToLast(limit);
 }
 
 const getMostVisitedMovies = (limit) => {
@@ -21,8 +21,7 @@ const getMovieByImdbID = (imdbID) => {
 const createMovie = (movie) => {
     const movieDB = {
         ...movie,
-        votes: 0,
-        score: 0,
+        meanScore: 0,
         views: 1,  
      }
 

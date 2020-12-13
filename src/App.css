@@ -108,3 +108,18 @@ a.dropdown-item:hover, button.dropdown-item:hover {
   background-color: rgb(27, 28, 34) !important;
   color: #e6e6e6;
 }
+
+.link-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.link-button:hover,
+.link-button:focus {
+text-decoration: none;
+}

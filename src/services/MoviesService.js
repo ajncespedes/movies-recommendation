@@ -33,3 +33,26 @@ export async function getSimilarMovies({ Title }) {
     }
     return newMovies;
 }
+
+export function getMeanScore(movie) {
+    let meanScore = 0;
+    if(movie.scores) {
+        for(let userScore of movie.scores) {
+            meanScore += userScore.score / movie.scores.length;
+        }
+    }
+
+    return meanScore;
+}
+
+export function getUserScore(username, movie) {
+    let userScore = 0;
+    if(movie.scores) {
+        let userIndex = movie.scores.findIndex((score => score.username === username));
+        if(movie.scores[userIndex]){
+            userScore = movie.scores[userIndex].score;
+        }
+    }
+
+    return userScore;
+}
